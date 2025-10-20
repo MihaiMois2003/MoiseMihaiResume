@@ -8,6 +8,7 @@ import type { OrbitSystemConfig } from "../../types/orbit.types";
 import { OrbitSystem } from "../OrbitingObjects/OrbitSystem";
 import { IntroText } from "../UI/IntroText";
 import type { AppPhase } from "../../types/ui.types";
+import { FurnitureSet } from "../Furniture/FurnitureSet";
 
 /**
  * Scene Component
@@ -20,6 +21,7 @@ import type { AppPhase } from "../../types/ui.types";
 const Scene: React.FC = () => {
   const [phase, setPhase] = useState<AppPhase>("intro");
   const [showIntroText, setShowIntroText] = useState(true);
+  const [showFurniture, setShowFurniture] = useState(false);
 
   const cameraConfig: CameraConfig = {
     position: [0, 2, 8],
@@ -28,11 +30,9 @@ const Scene: React.FC = () => {
     far: 1000,
   };
 
-  /**
-   * character position in 3D space
-   * negative x = left side of screen
-   */
   const characterPosition: Position3D = [-4, 0, 0];
+  const deskPosition: Position3D = [2, 0, 0];
+  const chairPosition: Position3D = [2, 0, 1.5];
 
   /**
    * orbit system configutaion
@@ -95,6 +95,7 @@ const Scene: React.FC = () => {
     setTimeout(() => {
       console.log("Text faded out. Starting transition...");
       setPhase("transition");
+      setShowFurniture(true);
     }, 500); //500 ms duration of fade out animation
   };
   return (
@@ -103,6 +104,12 @@ const Scene: React.FC = () => {
         <Lighting />
         <CharacterPlaceholder position={characterPosition} />
         <OrbitSystem config={orbitConfig} />
+
+        <FurnitureSet
+          isVisible={showFurniture}
+          deskPosition={deskPosition}
+          chairPosition={chairPosition}
+        />
 
         <OrbitControls />
         <gridHelper args={[20, 20, "#333", "#111"]} />
