@@ -1,7 +1,6 @@
-import React, { useRef } from "react";
 import type { DeskProps } from "../../types/furniture.types";
-import * as THREE from "three";
 import { useSpring, animated } from "@react-spring/three";
+import { useGLTF } from "@react-three/drei";
 
 /**
  * desk component
@@ -13,7 +12,7 @@ import { useSpring, animated } from "@react-spring/three";
  * @remarks - use react-spring for physics base bounce animation
  */
 export const Desk: React.FC<DeskProps> = ({ position, isVisible }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const { scene } = useGLTF("../../../public/models/IkeaDesk.glb");
 
   //bouncy entrance effect
   const springs = useSpring({
@@ -30,17 +29,14 @@ export const Desk: React.FC<DeskProps> = ({ position, isVisible }) => {
 
   return (
     // @ts-ignore
-    <animated.mesh
-      ref={meshRef}
+    <animated.primitive
+      object={scene.clone()}
       //@ts-ignore
       position={springs.position}
       //@ts-ignore
       scale={springs.scale}
       castShadow
       receiveShadow
-    >
-      <boxGeometry args={[3, 0.1, 1.5]} />
-      <meshStandardMaterial color="#8B4513" roughness={0.8} metalness={0.2} />
-    </animated.mesh>
+    />
   );
 };

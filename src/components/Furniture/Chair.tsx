@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import type { ChairProps } from "../../types/furniture.types";
 import * as THREE from "three";
 import { useSpring, animated } from "@react-spring/three";
+import { useGLTF } from "@react-three/drei";
 
 /**
  * Chair components
@@ -15,7 +16,7 @@ import { useSpring, animated } from "@react-spring/three";
  *          - appears slightly after desk
  */
 export const Chair: React.FC<ChairProps> = ({ position, isVisible }) => {
-  const groupRef = useRef<THREE.Group>(null);
+  const { scene } = useGLTF("../../../public/models/OfficeChair.glb");
 
   //bouncy effect different timing than desk
   const springs = useSpring({
@@ -32,24 +33,15 @@ export const Chair: React.FC<ChairProps> = ({ position, isVisible }) => {
   });
 
   return (
-    //@ts-ignore
-    <animated.group
-      ref={groupRef}
+    // @ts-ignore
+    <animated.primitive
+      object={scene.clone()}
       //@ts-ignore
       position={springs.position}
       //@ts-ignore
       scale={springs.scale}
-    >
-      {/*Chair seat */}
-      <mesh position={[0, 0, 0]} castShadow>
-        <boxGeometry args={[0.6, 0.1, 0.6]} />
-        <meshStandardMaterial color="#4A4A4A" roughness={0.7} metalness={0.3} />
-      </mesh>
-      {/* Chair Backrest */}
-      <mesh position={[0, 0.4, -0.25]} castShadow>
-        <boxGeometry args={[0.6, 0.7, 0.1]} />
-        <meshStandardMaterial color="#4A4A4A" roughness={0.7} metalness={0.3} />
-      </mesh>
-    </animated.group>
+      castShadow
+      receiveShadow
+    />
   );
 };
