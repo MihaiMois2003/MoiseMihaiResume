@@ -2,6 +2,7 @@ import React from "react";
 import type { OrbitingObjectData } from "../../types/orbit.types";
 import type { Position3D } from "../../types/three.types";
 import { useOrbitAnimation } from "./useOrbitAnimation";
+import { useGLTF } from "@react-three/drei";
 
 interface OrbitingObjectProps {
   data: OrbitingObjectData;
@@ -25,16 +26,24 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
     centerPosition
   );
 
-  return (
-    <mesh ref={meshRef} castShadow>
-      {/*box geometry later replaced with real models */}
-      <boxGeometry args={[data.size, data.size, data.size]} />
+  const model = data.modelPath ? useGLTF(data.modelPath) : null;
 
-      <meshStandardMaterial
-        color={data.color}
-        roughness={0.4}
-        metalness={0.6}
-      />
-    </mesh>
+  return (
+    <group ref={meshRef as any} castShadow>
+      {model ? (
+        // Render the 3D model
+        <primitive object={model.scene.clone()} scale={data.size} />
+      ) : (
+        // Fallback to cube if no model
+        <mesh castShadow>
+          <boxGeometry args={[data.size, data.size, data.size]} />
+          <meshStandardMaterial
+            color={data.color}
+            roughness={0.4}
+            metalness={0.6}
+          />
+        </mesh>
+      )}
+    </group>
   );
 };

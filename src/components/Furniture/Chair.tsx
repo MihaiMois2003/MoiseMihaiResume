@@ -25,7 +25,7 @@ export const Chair: React.FC<ChairProps> = ({ position, isVisible }) => {
       //@ts-ignore
       position={springs.position}
       //@ts-ignore
-      scale={springs.scale.to((s) => s * 0.6)}
+      scale={springs.scale.to((s) => s * 0.7)}
       rotation={[0, -Math.PI, 0]}
       castShadow
       receiveShadow

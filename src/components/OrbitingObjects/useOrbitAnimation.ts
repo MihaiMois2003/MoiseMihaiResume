@@ -44,7 +44,11 @@ export const useOrbitAnimation = (
 
     // Optional: Make object face the center (billboard effect)
     // Uncomment if you want objects to always face inward
-    // meshRef.current.lookAt(centerPosition[0], centerPosition[1], centerPosition[2]);
+    meshRef.current.lookAt(
+      centerPosition[0],
+      centerPosition[1],
+      centerPosition[2]
+    );
   });
 
   return meshRef;

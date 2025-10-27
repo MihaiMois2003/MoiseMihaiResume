@@ -27,12 +27,12 @@ export const PressEnterPrompt: React.FC = () => {
         },
       }}
     >
-      <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-        <span className="text-white/80 text-sm font-medium">Press</span>
-        <kbd className="px-3 py-1 bg-white/20 rounded text-white font-mono text-xs">
+      <div className="inline-flex items-center gap-3 px-6 py-3 bg-indigo-600/90 backdrop-blur-sm rounded-full border border-indigo-400/50 shadow-lg">
+        <span className="text-white text-sm font-medium">Press</span>
+        <kbd className="px-3 py-1 bg-white/30 rounded text-white font-mono text-xs font-bold">
           ENTER
         </kbd>
-        <span className="text-white/80 text-sm font-medium">to continue</span>
+        <span className="text-white text-sm font-medium">to continue</span>
       </div>
     </motion.div>
   );

@@ -48,7 +48,7 @@ export const IntroText: React.FC<IntroTextProps> = ({
       {isVisible && (
         <div className="absolute right-0 top-0 h-full w-1/2 flex items-center justify-center p-12 pointer-events-none">
           <motion.div
-            className="max-w-lg text-white pointer-events-auto"
+            className="max-w-lg pointer-events-auto"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -56,7 +56,7 @@ export const IntroText: React.FC<IntroTextProps> = ({
           >
             {/* Name/Title */}
             <motion.h1
-              className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+              className="text-6xl font-bold mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
               variants={itemVariants}
             >
               Moise Mihai Ioan
@@ -64,7 +64,7 @@ export const IntroText: React.FC<IntroTextProps> = ({
 
             {/* Subtitle */}
             <motion.h2
-              className="text-2xl font-light mb-6 text-white/80"
+              className="text-2xl font-light mb-6 text-slate-700"
               variants={itemVariants}
             >
               Full Stack Developer
@@ -72,7 +72,7 @@ export const IntroText: React.FC<IntroTextProps> = ({
 
             {/* Description */}
             <motion.p
-              className="text-lg leading-relaxed text-white/70 mb-8"
+              className="text-lg leading-relaxed text-slate-600 mb-8"
               variants={itemVariants}
             >
               Welcome to my interactive 3D portfolio. Explore my projects,
@@ -81,7 +81,7 @@ export const IntroText: React.FC<IntroTextProps> = ({
 
             {/* Divider */}
             <motion.div
-              className="w-20 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mb-8"
+              className="w-20 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mb-8"
               variants={itemVariants}
             />
 

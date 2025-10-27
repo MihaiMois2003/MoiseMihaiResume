@@ -6,7 +6,7 @@
  * Application state
  * Tracks which "phase" the app is in
  */
-export type AppPhase = "intro" | "transition" | "interactive";
+export type AppPhase = "loading" | "intro" | "transition" | "interactive";
 
 /**
  * Props for IntroText component

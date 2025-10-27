@@ -9,6 +9,7 @@ export interface OrbitingObjectData {
   speed: number; //rotation speed
   size: number; //object size
   initialAngle: number; //starting angle(radians)
+  modelPath?: string;
 }
 
 //configuration for entire orbit system
