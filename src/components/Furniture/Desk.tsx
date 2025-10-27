@@ -12,7 +12,7 @@ import { useGLTF } from "@react-three/drei";
  * @remarks - use react-spring for physics base bounce animation
  */
 export const Desk: React.FC<DeskProps> = ({ position, isVisible }) => {
-  const { scene } = useGLTF("../../../public/models/IkeaDesk.glb");
+  const { scene } = useGLTF("../../../models/IkeaDesk.glb");
 
   //bouncy entrance effect
   const springs = useSpring({

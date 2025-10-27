@@ -31,8 +31,8 @@ const Scene: React.FC = () => {
   };
 
   const characterPosition: Position3D = [-4, 0, 0];
-  const deskPosition: Position3D = [2, 0, 0];
-  const chairPosition: Position3D = [2, 0, 1.5];
+  const roomPosition: Position3D = [3, 0.3, 1];
+  const chairPosition: Position3D = [1.9, 0.35, 0.3];
 
   /**
    * orbit system configutaion
@@ -107,7 +107,7 @@ const Scene: React.FC = () => {
 
         <FurnitureSet
           isVisible={showFurniture}
-          deskPosition={deskPosition}
+          roomPosition={roomPosition}
           chairPosition={chairPosition}
         />
 

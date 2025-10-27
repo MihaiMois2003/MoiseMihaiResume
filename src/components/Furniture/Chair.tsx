@@ -1,45 +1,32 @@
-import React, { useRef } from "react";
+import React from "react";
 import type { ChairProps } from "../../types/furniture.types";
-import * as THREE from "three";
-import { useSpring, animated } from "@react-spring/three";
+import { animated } from "@react-spring/three";
 import { useGLTF } from "@react-three/drei";
+import { useEntranceAnimation } from "../../hooks/useEntranceAnimation";
 
 /**
- * Chair components
+ * Chair component
  *
- * to be replaced by blender model later
- *
- * @param position - 3d position
- * @param isVisible - triggers entrance animation
- *
- * @remarks - use react-spring for physics base bounce animation
- *          - appears slightly after desk
+ * Office chair that appears after the room
  */
 export const Chair: React.FC<ChairProps> = ({ position, isVisible }) => {
-  const { scene } = useGLTF("../../../public/models/OfficeChair.glb");
+  const { scene } = useGLTF("../../../models/OfficeChair.glb");
 
-  //bouncy effect different timing than desk
-  const springs = useSpring({
-    scale: isVisible ? 1 : 0,
-    position: isVisible
-      ? position
-      : [position[0], position[1] - 2, position[2]],
-    config: {
-      tension: 200,
-      friction: 14,
-      mass: 0.8,
-    },
-    delay: 200,
+  const springs = useEntranceAnimation({
+    isVisible,
+    position,
+    variant: "chair",
   });
 
   return (
-    // @ts-ignore
+    //@ts-ignore
     <animated.primitive
       object={scene.clone()}
       //@ts-ignore
       position={springs.position}
       //@ts-ignore
-      scale={springs.scale}
+      scale={springs.scale.to((s) => s * 0.6)}
+      rotation={[0, -Math.PI, 0]}
       castShadow
       receiveShadow
     />

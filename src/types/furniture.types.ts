@@ -13,6 +13,6 @@ export interface ChairProps {
 //furniture that manages both chair and desk
 export interface FurnitureSetProps {
   isVisible: boolean;
-  deskPosition: Position3D;
+  roomPosition: Position3D;
   chairPosition: Position3D;
 }
