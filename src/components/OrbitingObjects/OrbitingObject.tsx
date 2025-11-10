@@ -1,12 +1,18 @@
 import React from "react";
+import { animated } from "@react-spring/three";
 import type { OrbitingObjectData } from "../../types/orbit.types";
 import type { Position3D } from "../../types/three.types";
 import { useOrbitAnimation } from "./useOrbitAnimation";
+import { useObjectLanding } from "../../hooks/useObjectLanding";
 import { useGLTF } from "@react-three/drei";
+import * as THREE from "three";
 
 interface OrbitingObjectProps {
   data: OrbitingObjectData;
   centerPosition: Position3D;
+  phase: "orbiting" | "landing" | "interactive";
+  landingDelay?: number;
+  onAngleUpdate?: (id: string, angle: number) => void;
 }
 
 /**
@@ -18,23 +24,45 @@ interface OrbitingObjectProps {
 export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
   data,
   centerPosition,
+  phase,
+  landingDelay = 0,
+  onAngleUpdate,
 }) => {
   const meshRef = useOrbitAnimation(
     data.radius,
     data.speed,
     data.initialAngle,
-    centerPosition
+    centerPosition,
+    phase === "orbiting",
+    (angle) => onAngleUpdate?.(data.id, angle)
   );
 
   const model = data.modelPath ? useGLTF(data.modelPath) : null;
 
+  const currentPosition = meshRef.current?.position || new THREE.Vector3();
+  const targetPosition: Position3D = data.landingPosition || [0, 0, 0];
+
+  const landingSpring = useObjectLanding({
+    isLanding: phase === "landing" || phase === "interactive",
+    landingDelay,
+    currentPosition,
+    targetPosition,
+  });
+
+  const finalPosition =
+    phase === "orbiting" ? undefined : landingSpring.position;
+
   return (
-    <group ref={meshRef as any} castShadow>
+    <animated.group
+      ref={meshRef as any}
+      // @ts-ignore
+      position={finalPosition}
+      rotation={data.landingRotation}
+      castShadow
+    >
       {model ? (
-        // Render the 3D model
         <primitive object={model.scene.clone()} scale={data.size} />
       ) : (
-        // Fallback to cube if no model
         <mesh castShadow>
           <boxGeometry args={[data.size, data.size, data.size]} />
           <meshStandardMaterial
@@ -44,6 +72,6 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
           />
         </mesh>
       )}
-    </group>
+    </animated.group>
   );
 };

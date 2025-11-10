@@ -3,16 +3,16 @@ import type { OrbitingObjectData } from "../types/orbit.types";
 /**
  * Configuration for all orbiting objects
  *
- * Add or remove objects here to update the scene
- * IMPORTANT: Keep sizes consistent to prevent visual overlap!
+ * Objects have different sizes but their EDGES orbit at same visual distance
  */
+
 const NUM_OBJECTS = 5;
 const ANGLE_STEP = (Math.PI * 2) / NUM_OBJECTS;
 
-const SHARED_CONFIG = {
-  radius: 3,
-  speed: 0.3,
-  size: 0.6,
+const BASE_VISUAL_RADIUS = 4;
+
+const getAdjustedRadius = (size: number): number => {
+  return BASE_VISUAL_RADIUS + size / 2;
 };
 
 export const orbitingObjectsData: OrbitingObjectData[] = [
@@ -20,38 +20,59 @@ export const orbitingObjectsData: OrbitingObjectData[] = [
     id: "projects",
     label: "Projects",
     color: "#ff6b6b",
-    ...SHARED_CONFIG,
+    radius: getAdjustedRadius(2),
+    speed: 0.3,
+    size: 2,
     initialAngle: ANGLE_STEP * 0,
     modelPath: "/models/Laptop.glb",
+
+    landingPosition: [2.5, 1, 0],
+    landingRotation: [0, Math.PI / 4, 0],
   },
   {
     id: "skills",
     label: "Skills",
     color: "#4ecdc4",
-    ...SHARED_CONFIG,
+    radius: getAdjustedRadius(0.3),
+    speed: 0.3,
+    size: 0.4,
     initialAngle: ANGLE_STEP * 1,
+
+    landingPosition: [3, 1.5, 1],
   },
   {
     id: "certifications",
-    label: "certifications",
+    label: "Certifications",
     color: "#45b7d1",
-    ...SHARED_CONFIG,
+    radius: getAdjustedRadius(1),
+    speed: 0.3,
+    size: 1,
     initialAngle: ANGLE_STEP * 2,
     modelPath: "/models/CertificateFolder.glb",
+
+    landingPosition: [2, 1, -0.5],
   },
   {
     id: "experience",
     label: "Experience",
     color: "#f9ca24",
-    ...SHARED_CONFIG,
+    radius: getAdjustedRadius(2),
+    speed: 0.3,
+    size: 2,
     initialAngle: ANGLE_STEP * 3,
     modelPath: "/models/SchoolBag.glb",
+
+    landingPosition: [1.5, 0.5, 0.5],
   },
   {
     id: "contact",
     label: "Contact",
     color: "#a29bfe",
-    ...SHARED_CONFIG,
+    radius: getAdjustedRadius(0.4),
+    speed: 0.3,
+    size: 0.4,
     initialAngle: ANGLE_STEP * 4,
+
+    landingPosition: [3, 1.5, -1],
   },
 ];

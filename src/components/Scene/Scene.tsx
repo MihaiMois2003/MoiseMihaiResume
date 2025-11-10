@@ -34,13 +34,6 @@ const LoadingManager: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
   return null;
 };
 
-/**
- * Scene Component
- * Main container for all 3D elements
- *
- * @remarks
- * this component sets up the 3D canvas, camera, lighting, and character placeholder
- */
 const Scene: React.FC = () => {
   const [phase, setPhase] = useState<AppPhase>("loading");
   const [showIntroText, setShowIntroText] = useState(false);
@@ -86,8 +79,22 @@ const Scene: React.FC = () => {
       console.log("Exit animation complete, changing phase");
       setPhase("transition");
       setShowFurniture(true);
+
+      // NEW: After desk lands, trigger object landing
+      setTimeout(() => {
+        console.log("🚀 Starting landing sequence");
+        setPhase("landing");
+      }, 1500); // Wait for desk bounce to finish
     }, 600);
   };
+
+  // NEW: Determine orbit phase
+  const orbitPhase =
+    phase === "loading" || phase === "intro" || phase === "transition"
+      ? "orbiting"
+      : phase === "landing"
+      ? "landing"
+      : "interactive";
 
   return (
     <>
@@ -105,7 +112,9 @@ const Scene: React.FC = () => {
           <Environment preset="park" />
           <Lighting />
           <CharacterPlaceholder position={characterPosition} />
-          <OrbitSystem config={orbitConfig} />
+
+          {/* NEW: Pass phase to OrbitSystem */}
+          <OrbitSystem config={orbitConfig} phase={orbitPhase} />
 
           <FurnitureSet
             isVisible={showFurniture}

@@ -10,6 +10,9 @@ export interface OrbitingObjectData {
   size: number; //object size
   initialAngle: number; //starting angle(radians)
   modelPath?: string;
+
+  landingPosition?: Position3D;
+  landingRotation?: Position3D;
 }
 
 //configuration for entire orbit system
