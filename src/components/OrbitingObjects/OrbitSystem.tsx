@@ -9,7 +9,7 @@ interface OrbitSystemProps {
   phase: "orbiting" | "landing" | "interactive";
 }
 
-const STAGGER_DELAY = 300;
+const STAGGER_DELAY = 500;
 
 export const OrbitSystem: React.FC<OrbitSystemProps> = ({ config, phase }) => {
   const [landingOrder, setLandingOrder] = useState<string[]>([]);

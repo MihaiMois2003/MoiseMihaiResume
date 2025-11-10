@@ -80,11 +80,10 @@ const Scene: React.FC = () => {
       setPhase("transition");
       setShowFurniture(true);
 
-      // NEW: After desk lands, trigger object landing
       setTimeout(() => {
         console.log("🚀 Starting landing sequence");
         setPhase("landing");
-      }, 1500); // Wait for desk bounce to finish
+      }, 900); // Wait for chair bounce to finish
     }, 600);
   };
 

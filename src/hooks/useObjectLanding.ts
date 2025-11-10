@@ -34,7 +34,10 @@ export const useObjectLanding = ({
 
   const springs = useSpring({
     position: isLanding ? targetPosition : currentPosArray,
-    config: config.slow,
+    config: {
+      tension: 80,
+      friction: 26,
+    },
     delay: landingDelay,
     onRest: () => {
       if (isLanding && !hasLanded.current) {
