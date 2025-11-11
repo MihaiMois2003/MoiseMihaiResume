@@ -26,8 +26,8 @@ export const orbitingObjectsData: OrbitingObjectData[] = [
     initialAngle: ANGLE_STEP * 0,
     modelPath: "/models/Laptop.glb",
 
-    landingPosition: [2.5, 1, 0],
-    landingRotation: [0, Math.PI / 4, 0],
+    landingPosition: [0.85, 0.72, -2.48],
+    landingRotation: [0, 0, 0],
   },
   {
     id: "skills",
@@ -50,7 +50,8 @@ export const orbitingObjectsData: OrbitingObjectData[] = [
     initialAngle: ANGLE_STEP * 2,
     modelPath: "/models/CertificateFolder.glb",
 
-    landingPosition: [2, 1, -0.5],
+    landingPosition: [1.2, 0.03, -0.5],
+    landingRotation: [0, 0, 0],
   },
   {
     id: "experience",
@@ -62,7 +63,8 @@ export const orbitingObjectsData: OrbitingObjectData[] = [
     initialAngle: ANGLE_STEP * 3,
     modelPath: "/models/SchoolBag.glb",
 
-    landingPosition: [1.5, 0.5, 0.5],
+    landingPosition: [5, 0.03, 3],
+    landingRotation: [0, 1.57, 0],
   },
   {
     id: "contact",
@@ -74,5 +76,18 @@ export const orbitingObjectsData: OrbitingObjectData[] = [
     initialAngle: ANGLE_STEP * 4,
 
     landingPosition: [3, 1.5, -1],
+  },
+  {
+    id: "volunteering",
+    label: "Volunteering",
+    color: "#f9ca24",
+    radius: getAdjustedRadius(2),
+    speed: 0.3,
+    size: 1,
+    initialAngle: ANGLE_STEP * 3,
+    modelPath: "/models/Plant.glb",
+
+    landingPosition: [3, 0.03, 3],
+    landingRotation: [0, 1.57, 0],
   },
 ];

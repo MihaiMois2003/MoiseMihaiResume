@@ -33,7 +33,7 @@ export const RoomModel: React.FC<RoomModelProps> = ({
       //@ts-ignore
       position={springs.position}
       //@ts-ignore
-      scale={springs.scale.to((s) => s * 0.3)}
+      scale={springs.scale.to((s) => s * 0.35)}
       rotation={[0, -Math.PI / 2, 0]}
       castShadow
       receiveShadow
