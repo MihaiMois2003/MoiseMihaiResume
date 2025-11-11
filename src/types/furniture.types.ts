@@ -1,11 +1,6 @@
 import type { Position3D } from "./three.types";
 
-export interface DeskProps {
-  position: Position3D;
-  isVisible: boolean;
-}
-
-export interface ChairProps {
+export interface FurnitureProps {
   position: Position3D;
   isVisible: boolean;
 }
@@ -15,4 +10,5 @@ export interface FurnitureSetProps {
   isVisible: boolean;
   roomPosition: Position3D;
   chairPosition: Position3D;
+  phoneTablePosition: Position3D;
 }

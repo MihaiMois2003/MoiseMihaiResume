@@ -50,6 +50,7 @@ const Scene: React.FC = () => {
   const characterPosition: Position3D = [-4, 0, 0];
   const roomPosition: Position3D = [3, 0.3, 1];
   const chairPosition: Position3D = [2.85, 0.07, 0];
+  const phoneTablePosition: Position3D = [-0.4, 0.05, -0.5];
 
   const orbitConfig: OrbitSystemConfig = {
     centerPosition: characterPosition,
@@ -119,6 +120,7 @@ const Scene: React.FC = () => {
             isVisible={showFurniture}
             roomPosition={roomPosition}
             chairPosition={chairPosition}
+            phoneTablePosition={phoneTablePosition}
           />
 
           <OrbitControls />

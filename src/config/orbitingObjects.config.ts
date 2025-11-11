@@ -35,10 +35,11 @@ export const orbitingObjectsData: OrbitingObjectData[] = [
     color: "#4ecdc4",
     radius: getAdjustedRadius(0.3),
     speed: 0.3,
-    size: 0.4,
+    size: 1,
     initialAngle: ANGLE_STEP * 1,
+    modelPath: "/models/Books.glb",
 
-    landingPosition: [3, 1.5, 1],
+    landingPosition: [1, 0, -0.5],
   },
   {
     id: "certifications",
@@ -72,10 +73,12 @@ export const orbitingObjectsData: OrbitingObjectData[] = [
     color: "#a29bfe",
     radius: getAdjustedRadius(0.4),
     speed: 0.3,
-    size: 0.4,
+    size: 1.3,
     initialAngle: ANGLE_STEP * 4,
+    modelPath: "/models/Phone.glb",
 
-    landingPosition: [3, 1.5, -1],
+    landingPosition: [-0.4, 0.63, -0.5],
+    landingRotation: [0, 1.2, 0],
   },
   {
     id: "volunteering",

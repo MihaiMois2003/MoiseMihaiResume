@@ -1,5 +1,5 @@
 import React from "react";
-import type { ChairProps } from "../../types/furniture.types";
+import type { FurnitureProps } from "../../types/furniture.types";
 import { animated } from "@react-spring/three";
 import { useGLTF } from "@react-three/drei";
 import { useEntranceAnimation } from "../../hooks/useEntranceAnimation";
@@ -9,8 +9,8 @@ import { useEntranceAnimation } from "../../hooks/useEntranceAnimation";
  *
  * Office chair that appears after the room
  */
-export const Chair: React.FC<ChairProps> = ({ position, isVisible }) => {
-  const { scene } = useGLTF("../../../models/OfficeChair.glb");
+export const Chair: React.FC<FurnitureProps> = ({ position, isVisible }) => {
+  const { scene } = useGLTF("/models/OfficeChair.glb");
 
   const springs = useEntranceAnimation({
     isVisible,
