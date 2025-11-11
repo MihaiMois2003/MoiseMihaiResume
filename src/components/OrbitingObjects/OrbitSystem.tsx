@@ -1,39 +1,35 @@
-// src/components/OrbitingObjects/OrbitSystem.tsx
-
-import React, { useState } from "react";
+import React from "react";
 import { OrbitingObject } from "./OrbitingObject";
 import type { OrbitSystemConfig } from "../../types/orbit.types";
 
 interface OrbitSystemProps {
   config: OrbitSystemConfig;
   phase: "orbiting" | "landing" | "interactive";
+  onObjectClick?: (objectId: string) => void;
 }
 
-export const OrbitSystem: React.FC<OrbitSystemProps> = ({ config, phase }) => {
-  const [angles, setAngles] = useState<Record<string, number>>({});
-  const handleAngleUpdate = (id: string, angle: number) => {
-    setAngles((prev) => ({ ...prev, [id]: angle }));
-  };
-
-  /**
-   * stagger delay configuration,
-   * each object lands 300 ms later than the one  before
-   *
-   */
-  const STAGGER_DELAY = 200;
-
+/**
+ * OrbitSystem Component
+ *
+ * Manages all orbiting objects and passes interactions through
+ */
+export const OrbitSystem: React.FC<OrbitSystemProps> = ({
+  config,
+  phase,
+  onObjectClick,
+}) => {
   return (
-    <>
+    <group>
       {config.objects.map((objectData, index) => (
         <OrbitingObject
           key={objectData.id}
           data={objectData}
           centerPosition={config.centerPosition}
           phase={phase}
-          landingDelay={index * STAGGER_DELAY}
-          onAngleUpdate={handleAngleUpdate}
+          landingDelay={index * 0.15}
+          onObjectClick={onObjectClick}
         />
       ))}
-    </>
+    </group>
   );
 };

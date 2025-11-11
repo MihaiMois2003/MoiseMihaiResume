@@ -2,10 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { animated } from "@react-spring/three";
 import type { OrbitingObjectData } from "../../types/orbit.types";
 import type { Position3D } from "../../types/three.types";
-import { useOrbitAnimation } from "./useOrbitAnimation";
+import { useOrbitAnimation } from "../../hooks/useOrbitAnimation";
 import { useObjectLanding } from "../../hooks/useObjectLanding";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { useObjectInteraction } from "../../hooks/useObjectInteraction";
+import { useSpring } from "@react-spring/three";
+import * as THREE from "three";
 
 interface OrbitingObjectProps {
   data: OrbitingObjectData;
@@ -13,6 +16,7 @@ interface OrbitingObjectProps {
   phase: "orbiting" | "landing" | "interactive";
   landingDelay?: number;
   onAngleUpdate?: (id: string, angle: number) => void;
+  onObjectClick?: (objectId: string) => void;
 }
 
 /**
@@ -27,6 +31,7 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
   phase,
   landingDelay = 0,
   onAngleUpdate,
+  onObjectClick,
 }) => {
   const meshRef = useOrbitAnimation(
     data.radius,
@@ -44,6 +49,20 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
 
   //freeze position when landing starts
   const frozenPositionRef = useRef<Position3D | null>(null);
+
+  //interaction hook for hover and click
+  const { isHovered, handleClick, handlePointerOver, handlePointerOut } =
+    useObjectInteraction(data.id, data.label, onObjectClick);
+
+  const { scale } = useSpring({
+    scale: isHovered ? 1.15 : 1,
+    config: { tension: 300, friction: 10 },
+  });
+
+  const { glowIntensity } = useSpring({
+    glowIntensity: isHovered ? 2.5 : 0,
+    config: { tension: 200, friction: 20 },
+  });
 
   //update current pos every frame orbit
   useFrame(() => {
@@ -88,17 +107,43 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
       // @ts-ignore
       position={shouldUseLandingPosition ? landingSpring.position : undefined}
       rotation={shouldUseLandingPosition ? data.landingRotation : undefined}
+      onClick={handleClick}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
       castShadow
     >
-      {model ? (
-        <primitive object={model.scene.clone()} scale={data.size} />
-      ) : (
-        <mesh castShadow>
-          <boxGeometry args={[data.size, data.size, data.size]} />
-          <meshStandardMaterial
+      <animated.group scale={scale}>
+        {model ? (
+          <primitive object={model.scene.clone()} scale={data.size} />
+        ) : (
+          <mesh castShadow>
+            <boxGeometry args={[data.size, data.size, data.size]} />
+            <meshStandardMaterial
+              color={data.color}
+              roughness={0.4}
+              metalness={0.6}
+            />
+          </mesh>
+        )}
+      </animated.group>
+
+      <animated.pointLight
+        position={[0, 0, 0]}
+        intensity={glowIntensity}
+        distance={4}
+        color={data.color}
+        decay={2}
+      />
+
+      {isHovered && (
+        <mesh scale={[1.2, 1.2, 1.2]}>
+          <sphereGeometry args={[data.size * 0.6, 16, 16]} />
+          <meshBasicMaterial
             color={data.color}
-            roughness={0.4}
-            metalness={0.6}
+            transparent
+            opacity={0.15}
+            side={THREE.BackSide}
+            blending={THREE.AdditiveBlending}
           />
         </mesh>
       )}

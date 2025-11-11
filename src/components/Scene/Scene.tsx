@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -88,7 +88,11 @@ const Scene: React.FC = () => {
     }, 600);
   };
 
-  // NEW: Determine orbit phase
+  const handleObjectClick = useCallback((objectId: string) => {
+    console.log(`Scene received click for: ${objectId}`);
+    //add modal logic later
+  }, []);
+
   const orbitPhase =
     phase === "loading" || phase === "intro" || phase === "transition"
       ? "orbiting"
@@ -113,8 +117,11 @@ const Scene: React.FC = () => {
           <Lighting />
           <CharacterPlaceholder position={characterPosition} />
 
-          {/* NEW: Pass phase to OrbitSystem */}
-          <OrbitSystem config={orbitConfig} phase={orbitPhase} />
+          <OrbitSystem
+            config={orbitConfig}
+            phase={orbitPhase}
+            onObjectClick={handleObjectClick}
+          />
 
           <FurnitureSet
             isVisible={showFurniture}

@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import type { Position3D } from "../../types/three.types";
+import type { Position3D } from "../types/three.types";
 
 export const useOrbitAnimation = (
   radius: number,
