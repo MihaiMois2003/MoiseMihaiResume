@@ -1,7 +1,7 @@
 import { useSpring } from "@react-spring/three";
 import type { Position3D } from "../types/three.types";
 
-export type AnimationVariant = "room" | "chair" | "desk";
+export type AnimationVariant = "room" | "chair" | "desk" | "phoneTable";
 
 interface UseEntranceAnimationProps {
   isVisible: boolean;
@@ -27,6 +27,12 @@ const variantConfigs = {
     friction: 12,
     mass: 1,
     delay: 200,
+  },
+  phoneTable: {
+    tension: 200,
+    friction: 16,
+    mass: 1,
+    delay: 600,
   },
 };
 

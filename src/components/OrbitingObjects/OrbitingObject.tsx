@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { animated } from "@react-spring/three";
 import type { OrbitingObjectData } from "../../types/orbit.types";
 import type { Position3D } from "../../types/three.types";
 import { useOrbitAnimation } from "./useOrbitAnimation";
 import { useObjectLanding } from "../../hooks/useObjectLanding";
 import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 
 interface OrbitingObjectProps {
   data: OrbitingObjectData;
@@ -38,37 +39,45 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
 
   const model = data.modelPath ? useGLTF(data.modelPath) : null;
 
-  // Track current position for landing
-  const [currentPos, setCurrentPos] = useState<Position3D>([0, 0, 0]);
+  //continous tracking of current orbit position
+  const [currentOrbitPos, setCurrentOrbitPos] = useState<Position3D>([0, 0, 0]);
 
-  // Update current position from mesh ref
-  useEffect(() => {
-    if (meshRef.current && phase === "orbiting") {
-      const pos = meshRef.current.position;
-      setCurrentPos([pos.x, pos.y, pos.z]);
-    }
-  }, [meshRef, phase]);
+  //freeze position when landing starts
+  const frozenPositionRef = useRef<Position3D | null>(null);
 
-  // Capture position snapshot when landing starts
-  const [landingStartPos, setLandingStartPos] = useState<Position3D>([0, 0, 0]);
-  useEffect(() => {
-    if (phase === "landing" && meshRef.current) {
+  //update current pos every frame orbit
+  useFrame(() => {
+    if (phase === "orbiting" && meshRef.current) {
       const pos = meshRef.current.position;
-      setLandingStartPos([pos.x, pos.y, pos.z]);
+      const newPos: Position3D = [pos.x, pos.y, pos.z];
+      setCurrentOrbitPos(newPos);
     }
-  }, [phase, meshRef]);
+  });
+
+  //freeze position the moment phase changes from orbiting
+  useEffect(() => {
+    if (phase === "landing" && frozenPositionRef.current === null) {
+      frozenPositionRef.current = currentOrbitPos;
+      console.log(`${data.id} frozen at: `, currentOrbitPos);
+    }
+
+    if (phase === "orbiting") {
+      frozenPositionRef.current = null;
+    }
+  }, [phase, currentOrbitPos, data.id]);
 
   const targetPosition: Position3D = data.landingPosition || [0, 0, 0];
 
-  // Landing animation
+  //use frozen position as start position for landing
+  const landingStartPosition = frozenPositionRef.current || currentOrbitPos;
+
   const landingSpring = useObjectLanding({
     isLanding: phase === "landing" || phase === "interactive",
     landingDelay,
-    currentPosition: landingStartPos,
+    currentPosition: landingStartPosition,
     targetPosition,
   });
 
-  // Use landing position when landing/interactive, otherwise let orbit animation control it
   const shouldUseLandingPosition =
     phase === "landing" || phase === "interactive";
 

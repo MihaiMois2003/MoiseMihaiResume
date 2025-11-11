@@ -18,7 +18,7 @@ export const PhoneTable: React.FC<FurnitureProps> = ({
   const springs = useEntranceAnimation({
     isVisible,
     position,
-    variant: "chair",
+    variant: "phoneTable",
   });
 
   return (

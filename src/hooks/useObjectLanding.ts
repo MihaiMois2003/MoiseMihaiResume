@@ -45,12 +45,13 @@ export const useObjectLanding = ({
       position: isLanding ? targetPosition : startPosition,
     },
     config: {
-      tension: 120,
-      friction: 14,
       mass: 1,
+      tension: 80,
+      friction: 26,
+      clamp: false,
     },
     delay: isLanding ? landingDelay : 0,
-    reset: isLanding && !hasStarted, // Reset when landing first starts
+    reset: isLanding && !hasStarted,
   });
 
   return springs;
