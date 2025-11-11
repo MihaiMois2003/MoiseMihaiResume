@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { animated } from "@react-spring/three";
+import { animated, useSpring } from "@react-spring/three";
 import type { OrbitingObjectData } from "../../types/orbit.types";
 import type { Position3D } from "../../types/three.types";
 import { useOrbitAnimation } from "../../hooks/useOrbitAnimation";
@@ -7,8 +7,6 @@ import { useObjectLanding } from "../../hooks/useObjectLanding";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useObjectInteraction } from "../../hooks/useObjectInteraction";
-import { useSpring } from "@react-spring/three";
-import * as THREE from "three";
 
 interface OrbitingObjectProps {
   data: OrbitingObjectData;
@@ -23,7 +21,7 @@ interface OrbitingObjectProps {
  * OrbitingObject Component
  *
  * Renders a single object that orbits around a center point
- *
+ * Now with hover scale effect (no glow)
  */
 export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
   data,
@@ -44,27 +42,23 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
 
   const model = data.modelPath ? useGLTF(data.modelPath) : null;
 
-  //continous tracking of current orbit position
+  // Continuous tracking of current orbit position
   const [currentOrbitPos, setCurrentOrbitPos] = useState<Position3D>([0, 0, 0]);
 
-  //freeze position when landing starts
+  // Freeze position when landing starts
   const frozenPositionRef = useRef<Position3D | null>(null);
 
-  //interaction hook for hover and click
+  // Interaction hook for hover and click
   const { isHovered, handleClick, handlePointerOver, handlePointerOut } =
     useObjectInteraction(data.id, data.label, onObjectClick);
 
+  // Scale animation on hover (NO GLOW)
   const { scale } = useSpring({
     scale: isHovered ? 1.15 : 1,
     config: { tension: 300, friction: 10 },
   });
 
-  const { glowIntensity } = useSpring({
-    glowIntensity: isHovered ? 2.5 : 0,
-    config: { tension: 200, friction: 20 },
-  });
-
-  //update current pos every frame orbit
+  // Update current pos every frame orbit
   useFrame(() => {
     if (phase === "orbiting" && meshRef.current) {
       const pos = meshRef.current.position;
@@ -73,7 +67,7 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
     }
   });
 
-  //freeze position the moment phase changes from orbiting
+  // Freeze position the moment phase changes from orbiting
   useEffect(() => {
     if (phase === "landing" && frozenPositionRef.current === null) {
       frozenPositionRef.current = currentOrbitPos;
@@ -87,7 +81,7 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
 
   const targetPosition: Position3D = data.landingPosition || [0, 0, 0];
 
-  //use frozen position as start position for landing
+  // Use frozen position as start position for landing
   const landingStartPosition = frozenPositionRef.current || currentOrbitPos;
 
   const landingSpring = useObjectLanding({
@@ -107,11 +101,13 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
       // @ts-ignore
       position={shouldUseLandingPosition ? landingSpring.position : undefined}
       rotation={shouldUseLandingPosition ? data.landingRotation : undefined}
+      // Event handlers for interaction
       onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
       castShadow
     >
+      {/* Scale animation on hover */}
       <animated.group scale={scale}>
         {model ? (
           <primitive object={model.scene.clone()} scale={data.size} />
@@ -127,26 +123,8 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
         )}
       </animated.group>
 
-      <animated.pointLight
-        position={[0, 0, 0]}
-        intensity={glowIntensity}
-        distance={4}
-        color={data.color}
-        decay={2}
-      />
-
-      {isHovered && (
-        <mesh scale={[1.2, 1.2, 1.2]}>
-          <sphereGeometry args={[data.size * 0.6, 16, 16]} />
-          <meshBasicMaterial
-            color={data.color}
-            transparent
-            opacity={0.15}
-            side={THREE.BackSide}
-            blending={THREE.AdditiveBlending}
-          />
-        </mesh>
-      )}
+      {/* REMOVED: pointLight (glow effect) */}
+      {/* REMOVED: aura mesh (outline effect) */}
     </animated.group>
   );
 };

@@ -24,7 +24,6 @@ export const useObjectInteraction = (
   const handleClick = useCallback(
     (e: any) => {
       e.stopPropagation();
-
       console.log(`${objectLabel} pressed`);
 
       if (onObjectClick) {
