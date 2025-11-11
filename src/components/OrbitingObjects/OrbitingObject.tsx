@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { animated } from "@react-spring/three";
 import type { OrbitingObjectData } from "../../types/orbit.types";
 import type { Position3D } from "../../types/three.types";
 import { useOrbitAnimation } from "./useOrbitAnimation";
 import { useObjectLanding } from "../../hooks/useObjectLanding";
 import { useGLTF } from "@react-three/drei";
-import * as THREE from "three";
 
 interface OrbitingObjectProps {
   data: OrbitingObjectData;
@@ -39,25 +38,47 @@ export const OrbitingObject: React.FC<OrbitingObjectProps> = ({
 
   const model = data.modelPath ? useGLTF(data.modelPath) : null;
 
-  const currentPosition = meshRef.current?.position || new THREE.Vector3();
+  // Track current position for landing
+  const [currentPos, setCurrentPos] = useState<Position3D>([0, 0, 0]);
+
+  // Update current position from mesh ref
+  useEffect(() => {
+    if (meshRef.current && phase === "orbiting") {
+      const pos = meshRef.current.position;
+      setCurrentPos([pos.x, pos.y, pos.z]);
+    }
+  }, [meshRef, phase]);
+
+  // Capture position snapshot when landing starts
+  const [landingStartPos, setLandingStartPos] = useState<Position3D>([0, 0, 0]);
+  useEffect(() => {
+    if (phase === "landing" && meshRef.current) {
+      const pos = meshRef.current.position;
+      setLandingStartPos([pos.x, pos.y, pos.z]);
+    }
+  }, [phase, meshRef]);
+
   const targetPosition: Position3D = data.landingPosition || [0, 0, 0];
 
+  // Landing animation
   const landingSpring = useObjectLanding({
     isLanding: phase === "landing" || phase === "interactive",
     landingDelay,
-    currentPosition,
+    currentPosition: landingStartPos,
     targetPosition,
   });
 
-  const finalPosition =
-    phase === "orbiting" ? undefined : landingSpring.position;
+  // Use landing position when landing/interactive, otherwise let orbit animation control it
+  const shouldUseLandingPosition =
+    phase === "landing" || phase === "interactive";
 
   return (
     <animated.group
-      ref={meshRef as any}
+      // Only apply ref during orbiting phase
+      ref={phase === "orbiting" ? meshRef : null}
       // @ts-ignore
-      position={finalPosition}
-      rotation={data.landingRotation}
+      position={shouldUseLandingPosition ? landingSpring.position : undefined}
+      rotation={shouldUseLandingPosition ? data.landingRotation : undefined}
       castShadow
     >
       {model ? (

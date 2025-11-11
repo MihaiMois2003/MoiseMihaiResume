@@ -1,50 +1,56 @@
-// src/hooks/useObjectLanding.ts
-
-import { useRef } from "react";
-import { useSpring, config } from "@react-spring/three";
-import * as THREE from "three";
+import { useSpring } from "@react-spring/three";
 import type { Position3D } from "../types/three.types";
+import * as THREE from "three";
+import { useState, useEffect } from "react";
 
-interface UseLandingParams {
+interface UseObjectLandingProps {
   isLanding: boolean;
   landingDelay: number;
-  currentPosition: THREE.Vector3;
+  currentPosition: THREE.Vector3 | Position3D;
   targetPosition: Position3D;
-  onLandingComplete?: () => void;
 }
 
-/**
- * Hook for animating object landing from orbit to final position
- */
 export const useObjectLanding = ({
   isLanding,
   landingDelay,
   currentPosition,
   targetPosition,
-  onLandingComplete,
-}: UseLandingParams) => {
-  const hasLanded = useRef(false);
+}: UseObjectLandingProps) => {
+  // Track if we've captured the start position
+  const [startPosition, setStartPosition] = useState<Position3D>([0, 0, 0]);
+  const [hasStarted, setHasStarted] = useState(false);
 
-  // Convert current position to array, with fallback
-  const currentPosArray: Position3D = [
-    currentPosition?.x ?? 0,
-    currentPosition?.y ?? 0,
-    currentPosition?.z ?? 0,
-  ];
+  // Capture the current position when landing starts
+  useEffect(() => {
+    if (isLanding && !hasStarted) {
+      const pos: Position3D =
+        currentPosition instanceof THREE.Vector3
+          ? [currentPosition.x, currentPosition.y, currentPosition.z]
+          : currentPosition;
+      setStartPosition(pos);
+      setHasStarted(true);
+    }
+
+    // Reset when not landing
+    if (!isLanding && hasStarted) {
+      setHasStarted(false);
+    }
+  }, [isLanding, currentPosition, hasStarted]);
 
   const springs = useSpring({
-    position: isLanding ? targetPosition : currentPosArray,
+    from: {
+      position: startPosition,
+    },
+    to: {
+      position: isLanding ? targetPosition : startPosition,
+    },
     config: {
-      tension: 80,
-      friction: 26,
+      tension: 120,
+      friction: 14,
+      mass: 1,
     },
-    delay: landingDelay,
-    onRest: () => {
-      if (isLanding && !hasLanded.current) {
-        hasLanded.current = true;
-        onLandingComplete?.();
-      }
-    },
+    delay: isLanding ? landingDelay : 0,
+    reset: isLanding && !hasStarted, // Reset when landing first starts
   });
 
   return springs;
