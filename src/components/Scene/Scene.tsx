@@ -17,6 +17,14 @@ import type { AppPhase } from "../../types/ui.types";
 import { FurnitureSet } from "../Furniture/FurnitureSet";
 import { orbitingObjectsData } from "../../config/orbitingObjects.config";
 import { AnimatePresence } from "framer-motion";
+import { useModal } from "../../hooks/useModal";
+import { ProjectsModal } from "../Modals/ModalComponents";
+import { SkillsModal } from "../Modals/SkillsModal";
+import { ExperienceModal } from "../Modals/ExperienceModal";
+import { VolunteeringModal } from "../Modals/VolunteeringModal";
+import { ContactModal } from "../Modals/ContactModal";
+import { CertificationsModal } from "../Modals/CertificationsModal";
+import type { ModalId } from "../../types/modal.types";
 
 const LoadingManager: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
   const { progress } = useProgress();
@@ -39,6 +47,8 @@ const Scene: React.FC = () => {
   const [showIntroText, setShowIntroText] = useState(false);
   const [showFurniture, setShowFurniture] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { activeModal, openModal, closeModal, isModalOpen } = useModal();
 
   const cameraConfig: CameraConfig = {
     position: [0, 2, 8],
@@ -88,10 +98,13 @@ const Scene: React.FC = () => {
     }, 600);
   };
 
-  const handleObjectClick = useCallback((objectId: string) => {
-    console.log(`Scene received click for: ${objectId}`);
-    //add modal logic later
-  }, []);
+  const handleObjectClick = useCallback(
+    (objectId: string) => {
+      console.log(`Scene received click for: ${objectId}`);
+      openModal(objectId as ModalId);
+    },
+    [openModal]
+  );
 
   const orbitPhase =
     phase === "loading" || phase === "intro" || phase === "transition"
@@ -143,6 +156,22 @@ const Scene: React.FC = () => {
             />
           )}
         </AnimatePresence>
+
+        <ProjectsModal isOpen={isModalOpen("projects")} onClose={closeModal} />
+        <SkillsModal isOpen={isModalOpen("skills")} onClose={closeModal} />
+        <CertificationsModal
+          isOpen={isModalOpen("certifications")}
+          onClose={closeModal}
+        />
+        <ExperienceModal
+          isOpen={isModalOpen("experience")}
+          onClose={closeModal}
+        />
+        <ContactModal isOpen={isModalOpen("contact")} onClose={closeModal} />
+        <VolunteeringModal
+          isOpen={isModalOpen("volunteering")}
+          onClose={closeModal}
+        />
       </div>
     </>
   );
