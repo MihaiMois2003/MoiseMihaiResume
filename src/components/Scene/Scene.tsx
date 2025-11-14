@@ -18,7 +18,7 @@ import { FurnitureSet } from "../Furniture/FurnitureSet";
 import { orbitingObjectsData } from "../../config/orbitingObjects.config";
 import { AnimatePresence } from "framer-motion";
 import { useModal } from "../../hooks/useModal";
-import { ProjectsModal } from "../Modals/ModalComponents";
+import { ProjectsModal } from "../Modals/ProjectsModal";
 import { SkillsModal } from "../Modals/SkillsModal";
 import { ExperienceModal } from "../Modals/ExperienceModal";
 import { VolunteeringModal } from "../Modals/VolunteeringModal";
